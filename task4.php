@@ -115,11 +115,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }else{
       echo "welcome " , $userName;
-      $file = fopen("users.txt","w")  or die("unable to open file");
+      $file = fopen("users.txt","a")  or die("unable to open file");
 
-    $txt = $userName ;// ," " , $email ," " , $address , " " ,$gender ," " , $linkedinUrl , " " , $name  , "\n";
+    $txt = $userName .' ' . $email .' '. $address . ' ' .$gender .' ' . $linkedinUrl . ' ' . $name ;
+    $txt .="\n";
 
-    fwrite($file,$userName);
+    fwrite($file,$txt);
 
     fclose($file);
     }
