@@ -5,9 +5,6 @@ require 'dbConnection.php';
 $sql = "select * from posts";
 
 $op = mysqli_query($con,$sql);
-
-
-
 ?>
 
 
@@ -60,7 +57,7 @@ $op = mysqli_query($con,$sql);
                 <th>Title</th>
                 <th>Content</th>
                 <th>Image</th>
-           
+                <th>action</th>            
             </tr>
 
        
@@ -73,14 +70,12 @@ $op = mysqli_query($con,$sql);
            <tr>
            <td><?php echo $data['id'];?></td>
           <td> <?php echo $data['title'];?> </td>
-           <td><?php echo $data['content'];?> </td>
-                 <td>echo $data['imgdir'];<img src="<?php echo $data['imgdir'];?>" height="100" width="100"></td>
-
-
-                 <!-- <td>
-                 <a href='' class='btn btn-danger m-r-1em'>Delete</a>
-                 <a href='' class='btn btn-primary m-r-1em'>Edit</a>       
-                </td> -->
+       <td><?php echo $data['content'];?> </td>
+        <td><img src="<?php echo $data['imgdir'];?>" height="80" width="80"></td>
+        <td>
+                 <a href='delete.php?id=<?php echo $data['id'];?>' class='btn btn-danger m-r-1em'>Delete</a>
+                 <a href='edit.php?id=<?php echo $data['id'];?>' class='btn btn-primary m-r-1em'>Edit</a>       
+                </td> 
 
            </tr> 
 

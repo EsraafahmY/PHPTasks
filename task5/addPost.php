@@ -35,32 +35,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
   if(!empty($_FILES['image']['name'])){
-      $name = $_FILES['image']['name'];
-      $temp = $_FILES['image']['tmp_name'];
-      $size = $_FILES['image']['size'];
-      $type = $_FILES['image']['type'];
+    $name = $_FILES['image']['name'];
+    $temp = $_FILES['image']['tmp_name'];
+    $size = $_FILES['image']['size'];
+    $type = $_FILES['image']['type'];
+  
+    $nameArray =  explode('/',$type);
+
+    $extension =  strtolower($nameArray[1]);
+  
+    $FinalName = rand().time().'.'.$extension;
+
+    $allowedExt = array('png','jpg','jpeg'); 
+
+    if(in_array($extension,$allowedExt)){
+         $folder = "./uploads/";
+
+         $finalPath = $folder.$FinalName;
+
+        if(move_uploaded_file($temp,$finalPath)){
+
+          echo 'File Uploaded';
+        }else{
+
+          echo 'error try again';
+        }
+    }else{
+
+      echo 'Invalid Extension';
+    }
+ }else{
+
+      echo 'File Required';
+     }  
     
-      $nameArray =  explode('/',$type);
 
-      $extension =  strtolower($nameArray[1]);
-    
-      $FinalName = rand().time().'.'.$extension;
-
-      $allowedExt = array('png','jpg','jpeg'); 
-
-      if(in_array($extension,$allowedExt)){
-           $folder = "./uploads/";
-
-           $finalPath = $folder.$FinalName;
-
-      }else{
-
-        echo 'Invalid Extension';
-      }
-       }else{
-
-        echo 'File Required';
-       }   
        
        if(count($errors) > 0){
 
@@ -70,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
      }else{
       $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
-   $sql = "insert into posts (title,content,image,imgdir) values ('$title','$content','$file' , '$finalPath')";
+   $sql = "insert into posts (title,content,image,imgdir) values ('$title','$content','$file','$finalPath')";
 
     $op =  mysqli_query($con,$sql);
 
@@ -81,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }else{
         echo 'Error Try Again';
     }
-
+    header("Location: showPosts.php");
     }
   }
   include 'header.php';
