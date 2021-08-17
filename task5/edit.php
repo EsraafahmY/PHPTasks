@@ -29,9 +29,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
   $image = CleanInputs($_POST['image']);
   $imagedir = CleanInputs($_POST['imgdir']);
 
-
-
-
   if(empty($title)){
 
     $errors['title'] = " Field Required";
@@ -48,6 +45,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $errors['content'] = "Invalid String";
   }
+
+         # Fetch Data .... 
+$sql = "select * from posts where id = $id";
+$op = mysqli_query($con,$sql);
+$data = mysqli_fetch_assoc($op);
 
   if(!empty($_FILES['image']['name'])){
     $name = $_FILES['image']['name'];
@@ -70,7 +72,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         if(move_uploaded_file($temp,$finalPath)){
 
-          echo 'File Uploaded';
+          // echo 'File Uploaded';
+          unlink($data['imgdir']);
+
         }else{
 
           echo 'error try again';
@@ -81,7 +85,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
  }else{
 
-      echo 'File Required';
+      // echo 'File Required';
+      $finalPath = $data['imgdir'];
      }  
 
     if(count($errors) > 0){
@@ -91,7 +96,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             echo '* '.$key.' : '.$error.'<br>';
         }
      }else{
-       unlink($finalPath);
 
      $sql = "update posts set title='$title' , content='$content' , imgdir='$finalPath'  where id = $id";
 
@@ -106,14 +110,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo 'Error Try Again';
     }
     }
+    mysqli_close($con);
+
 }
-
-# Fetch Data .... 
-$sql = "select * from posts where id = $id";
-$op = mysqli_query($con,$sql);
-$data = mysqli_fetch_assoc($op);
-
-mysqli_close($con);
+       # Fetch Data .... 
+       $sql = "select * from posts where id = $id";
+       $op = mysqli_query($con,$sql);
+       $data = mysqli_fetch_assoc($op);
 
 ?>
 
@@ -147,10 +150,8 @@ mysqli_close($con);
 <input type="text" name="content" value="<?php echo $data['content'];?>" class="form-control" id="exampleInputEmail1" placeholder="Content ...">
 </div>
 <div class="form-group">
-  <label for="image"> Choose Image: </label><input type="file" name="image" class="form-control">
-
+  <label for="image"> Choose Image: </label><input type="file" name="image" value="<?php echo $data['title'];?>" class="form-control">
 </div>
-
 
 <button type="submit" class="btn btn-primary">Update</button>
 </form>
